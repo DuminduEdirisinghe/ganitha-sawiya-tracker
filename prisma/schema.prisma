@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+  username String @unique
+  password String // Simplified for this demo (store hash in real app)
+  role     String @default("DISTRICT_ADMIN") // SUPER_ADMIN, DISTRICT_ADMIN
+  district String? // Only for DISTRICT_ADMIN
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  date        DateTime
+  endDate     DateTime?
+  type        String   @default("Paper") // Remedial, Paper
+  location    String   // School Name
+  district    String
+  status      String   // UPCOMING, COMPLETED, CANCELLED
+  description String?
+  imagePaths  String?  // JSON string of image URLs
+  volunteers  Volunteer[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Volunteer {
+  id        String @id @default(cuid())
+  name      String
+  role      String // e.g. Lecturer, Coordinator, Member
+  events    Event[]
+  email     String?
+  phone     String?
+  bio       String?
+  photoUrl  String?
+}
