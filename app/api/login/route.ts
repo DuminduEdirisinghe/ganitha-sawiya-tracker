@@ -8,9 +8,10 @@ export async function POST(req: Request) {
     try {
         const { username, password } = await req.json();
 
-        // Use raw query to bypass potential stale Prisma Client types
-        const users = await prisma.$queryRaw<any[]>`SELECT * FROM User WHERE username = ${username} LIMIT 1`;
-        const user = users[0];
+        // Use standard Prisma Client
+        const user = await prisma.user.findUnique({
+            where: { username }
+        });
 
         if (!user || user.password !== password) {
             return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
