@@ -194,11 +194,11 @@ export default function DashboardClient({ events }: { events: any[] }) {
                     District Scoreboard {selectedDistrict ? `(${selectedDistrict})` : ""}
                 </h2>
                 <div className="w-full">
-                     <DistrictScoreboard events={filteredEvents} />
+                    <DistrictScoreboard events={filteredEvents} />
                 </div>
                 {/* Removed old text breakdown table as Scoreboard covers it */}
             </div>
-            </div>
+
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Recent Activity */}
@@ -254,41 +254,41 @@ export default function DashboardClient({ events }: { events: any[] }) {
                 </div>
             </div>
 
-            {/* Simple Modal */ }
-    {
-        modalState.isOpen && (
-            <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in duration-200"
-                onClick={() => setModalState({ ...modalState, isOpen: false })}
-            >
-                <div
-                    className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <div className="p-4 border-b flex justify-between items-center bg-slate-50">
-                        <h3 className="font-bold text-slate-700">{modalState.title}</h3>
-                        <button onClick={() => setModalState({ ...modalState, isOpen: false })} className="text-slate-400 hover:text-slate-600">
-                            <X size={20} />
-                        </button>
+            {/* Simple Modal */}
+            {
+                modalState.isOpen && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                        onClick={() => setModalState({ ...modalState, isOpen: false })}
+                    >
+                        <div
+                            className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+                                <h3 className="font-bold text-slate-700">{modalState.title}</h3>
+                                <button onClick={() => setModalState({ ...modalState, isOpen: false })} className="text-slate-400 hover:text-slate-600">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="p-4 max-h-[300px] overflow-y-auto">
+                                {modalState.items.length > 0 ? (
+                                    <ul className="space-y-2">
+                                        {modalState.items.map((item, idx) => (
+                                            <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-sm text-slate-400 text-center italic">No items to display.</p>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    <div className="p-4 max-h-[300px] overflow-y-auto">
-                        {modalState.items.length > 0 ? (
-                            <ul className="space-y-2">
-                                {modalState.items.map((item, idx) => (
-                                    <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-sm text-slate-400 text-center italic">No items to display.</p>
-                        )}
-                    </div>
-                </div>
-            </div>
-        )
-    }
+                )
+            }
         </div >
     );
 }
