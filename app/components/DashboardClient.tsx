@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
 import { MapPin, School, Users, Calendar as CalendarIcon, Filter, X } from "lucide-react";
 import DistrictChart from "./DistrictChart";
@@ -30,23 +30,9 @@ export default function DashboardClient({ events, currentUser }: { events: any[]
     const [timeFilter, setTimeFilter] = useState<keyof typeof TIME_FILTERS>("ALL");
     //...
     //...
-    {/* Overdue Banner - Context Aware */ }
-    {
-        currentUser && (
-            <PendingReviews
-                events={filteredEvents.filter(e => {
-                    const isOverdue = e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0));
-                    if (!isOverdue) return false;
 
-                    // Visibility Logic
-                    if (currentUser.role === 'SUPER_ADMIN') return true;
-                    if (currentUser.role === 'DISTRICT_ADMIN' && e.district === currentUser.district) return true;
 
-                    return false;
-                })}
-            />
-        )
-    }
+
     const [modalState, setModalState] = useState<{ isOpen: boolean; title: string; items: string[] }>({
         isOpen: false,
         title: "",
@@ -130,6 +116,19 @@ export default function DashboardClient({ events, currentUser }: { events: any[]
             uniqueSchoolsList: Array.from(uniqueSchoolsSet).sort()
         };
     }, [filteredEvents]);
+
+    useEffect(() => {
+        console.log("--- DASHBOARD DEBUG ---");
+        console.log("User:", currentUser);
+        const overdueFiltered = filteredEvents.filter(e => {
+            const isOverdue = e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0));
+            return isOverdue;
+        });
+        console.log("Overdue (All):", overdueFiltered.length);
+        if (overdueFiltered.length > 0) {
+            console.log("Overdue Districts:", overdueFiltered.map(e => e.district));
+        }
+    }, [currentUser, filteredEvents]);
 
     const openModal = (title: string, items: string[]) => {
         setModalState({ isOpen: true, title, items });
