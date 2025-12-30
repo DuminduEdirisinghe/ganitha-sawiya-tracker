@@ -23,18 +23,26 @@ export default async function Home() {
     // Check for admin role
     const cookieStore = cookies();
     const token = cookieStore.get("auth_token")?.value;
-    let isAdmin = false;
+    let currentUser = null;
+
     if (token) {
       try {
         const payload = JSON.parse(token);
-        if (payload.role) isAdmin = true; // Any role (Super or District) is admin
+        if (payload.role) {
+          currentUser = {
+            role: payload.role,
+            district: payload.district
+          };
+        }
       } catch (e) {
-        if (token === "admin_logged_in_v2") isAdmin = true;
+        if (token === "admin_logged_in_v2") {
+          currentUser = { role: "SUPER_ADMIN", district: null };
+        }
       }
     }
 
     return (
-      <DashboardClient events={serializedEvents} isAdmin={isAdmin} />
+      <DashboardClient events={serializedEvents} currentUser={currentUser} />
     );
   } catch (error) {
     console.error("Dashboard Load Error:", error);

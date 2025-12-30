@@ -187,15 +187,25 @@ export default function DashboardClient({ events, currentUser }: { events: any[]
             {currentUser && (
                 <PendingReviews
                     events={filteredEvents.filter(e => {
+                <PendingReviews 
+                    events={events.filter(e => {
                         const isOverdue = e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0));
                         if (!isOverdue) return false;
-
+                        
                         // Visibility Logic
                         if (currentUser.role === 'SUPER_ADMIN') return true;
-                        if (currentUser.role === 'DISTRICT_ADMIN' && e.district === currentUser.district) return true;
-
+                        
+                        // Robust District Check
+                        if (currentUser.role === 'DISTRICT_ADMIN') {
+                            const eventDistrict = e.district?.trim().toLowerCase();
+                            const userDistrict = currentUser.district?.trim().toLowerCase();
+                            if (!userDistrict) return false;
+                            return eventDistrict === userDistrict;
+                        }
+                        
                         return false;
-                    })}
+                    })} 
+                />
                 />
             )}
 
