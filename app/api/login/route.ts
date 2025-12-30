@@ -7,14 +7,20 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
     try {
         const { username, password } = await req.json();
+        const cleanUsername = username.trim();
+        const cleanPassword = password.trim();
 
         // Use standard Prisma Client
         const user = await prisma.user.findUnique({
-            where: { username }
+            where: { username: cleanUsername }
         });
 
-        if (!user || user.password !== password) {
-            return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+        if (!user) {
+            return NextResponse.json({ error: `User '${cleanUsername}' not found` }, { status: 404 });
+        }
+
+        if (user.password !== cleanPassword) {
+            return NextResponse.json({ error: "Password incorrect" }, { status: 401 });
         }
 
         // Create a payload with role and district
