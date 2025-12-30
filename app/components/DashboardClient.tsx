@@ -5,6 +5,7 @@ import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, 
 import { MapPin, School, Users, Calendar as CalendarIcon, Filter, X } from "lucide-react";
 import DistrictChart from "./DistrictChart";
 import DistrictProgress from "./DistrictProgress";
+import DistrictScoreboard from "./DistrictScoreboard";
 import { useRouter } from "next/navigation";
 
 // All 25 Districts
@@ -187,26 +188,16 @@ export default function DashboardClient({ events }: { events: any[] }) {
 
             {/* District Breakdown / Chart */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+
                 <h2 className="text-lg font-bold mb-4 flex items-center">
                     <div className="w-2 h-8 bg-blue-600 rounded mr-3"></div>
-                    District Breakdown {selectedDistrict ? `(${selectedDistrict})` : ""}
+                    District Scoreboard {selectedDistrict ? `(${selectedDistrict})` : ""}
                 </h2>
-                <div className="h-[300px] w-full">
-                    <DistrictProgress data={stats.chartData} />
+                <div className="w-full">
+                     <DistrictScoreboard events={filteredEvents} />
                 </div>
-                {/* Text Breakdown Table - Show always if not filtered, or show just the one if filtered */}
-                <div className="mt-8">
-                    <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Detailed Statistics</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                        {stats.chartData.map(d => (
-                            <div key={d.name} className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex justify-between items-center">
-                                <span className="font-medium text-slate-700">{d.name}</span>
-                                <span className="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-sm">{d.value}</span>
-                            </div>
-                        ))}
-                        {stats.chartData.length === 0 && <p className="text-sm text-slate-400 italic">No completed seminars in this selection.</p>}
-                    </div>
-                </div>
+                {/* Removed old text breakdown table as Scoreboard covers it */}
+            </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -263,40 +254,42 @@ export default function DashboardClient({ events }: { events: any[] }) {
                 </div>
             </div>
 
-            {/* Simple Modal */}
-            {modalState.isOpen && (
+            {/* Simple Modal */ }
+    {
+        modalState.isOpen && (
+            <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                onClick={() => setModalState({ ...modalState, isOpen: false })}
+            >
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in duration-200"
-                    onClick={() => setModalState({ ...modalState, isOpen: false })}
+                    className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div
-                        className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="p-4 border-b flex justify-between items-center bg-slate-50">
-                            <h3 className="font-bold text-slate-700">{modalState.title}</h3>
-                            <button onClick={() => setModalState({ ...modalState, isOpen: false })} className="text-slate-400 hover:text-slate-600">
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <div className="p-4 max-h-[300px] overflow-y-auto">
-                            {modalState.items.length > 0 ? (
-                                <ul className="space-y-2">
-                                    {modalState.items.map((item, idx) => (
-                                        <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-sm text-slate-400 text-center italic">No items to display.</p>
-                            )}
-                        </div>
+                    <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+                        <h3 className="font-bold text-slate-700">{modalState.title}</h3>
+                        <button onClick={() => setModalState({ ...modalState, isOpen: false })} className="text-slate-400 hover:text-slate-600">
+                            <X size={20} />
+                        </button>
+                    </div>
+                    <div className="p-4 max-h-[300px] overflow-y-auto">
+                        {modalState.items.length > 0 ? (
+                            <ul className="space-y-2">
+                                {modalState.items.map((item, idx) => (
+                                    <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-sm text-slate-400 text-center italic">No items to display.</p>
+                        )}
                     </div>
                 </div>
-            )}
-        </div>
+            </div>
+        )
+    }
+        </div >
     );
 }
 
