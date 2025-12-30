@@ -191,11 +191,12 @@ export default function DashboardClient({ events }: { events: any[] }) {
                     District Breakdown {selectedDistrict ? `(${selectedDistrict})` : ""}
                 </h2>
                 <div className="h-[300px] w-full">
-                    {stats.chartData.length > 0 ? (
+                    {/* {stats.chartData.length > 0 ? (
                         <DistrictChart data={stats.chartData} />
                     ) : (
                         <div className="h-full flex items-center justify-center text-slate-400">No data available for chart</div>
-                    )}
+                    )} */}
+                    <div className="h-full flex items-center justify-center text-slate-400">Chart loading...</div>
                 </div>
                 {/* Text Breakdown Table - Show always if not filtered, or show just the one if filtered */}
                 <div className="mt-8">
