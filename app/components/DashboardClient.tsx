@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
 import { MapPin, School, Users, Calendar as CalendarIcon, Filter, X } from "lucide-react";
 import DistrictChart from "./DistrictChart";
+import DistrictProgress from "./DistrictProgress";
 import { useRouter } from "next/navigation";
 
 // All 25 Districts
@@ -191,12 +192,7 @@ export default function DashboardClient({ events }: { events: any[] }) {
                     District Breakdown {selectedDistrict ? `(${selectedDistrict})` : ""}
                 </h2>
                 <div className="h-[300px] w-full">
-                    {/* {stats.chartData.length > 0 ? (
-                        <DistrictChart data={stats.chartData} />
-                    ) : (
-                        <div className="h-full flex items-center justify-center text-slate-400">No data available for chart</div>
-                    )} */}
-                    <div className="h-full flex items-center justify-center text-slate-400">Chart loading...</div>
+                    <DistrictProgress data={stats.chartData} />
                 </div>
                 {/* Text Breakdown Table - Show always if not filtered, or show just the one if filtered */}
                 <div className="mt-8">
