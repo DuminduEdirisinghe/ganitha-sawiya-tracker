@@ -21,7 +21,7 @@ export default function LoginPage() {
         });
 
         if (res.ok) {
-            router.push("/admin"); // Redirect to admin dashboard
+            router.push("/"); // Redirect to main dashboard
             router.refresh();
         } else {
             const data = await res.json();
