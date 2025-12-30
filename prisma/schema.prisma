@@ -17,6 +17,7 @@ model User {
   password String // Simplified for this demo (store hash in real app)
   role     String @default("DISTRICT_ADMIN") // SUPER_ADMIN, DISTRICT_ADMIN
   district String? // Only for DISTRICT_ADMIN
+  @@map("users")
 }
 
 model Event {
@@ -33,6 +34,7 @@ model Event {
   volunteers  Volunteer[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  @@map("events")
 }
 
 model Volunteer {
@@ -44,4 +46,5 @@ model Volunteer {
   phone     String?
   bio       String?
   photoUrl  String?
+  @@map("volunteers")
 }
