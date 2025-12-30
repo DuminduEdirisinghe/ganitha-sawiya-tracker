@@ -46,7 +46,8 @@ export default function RootLayout({
                 <span>Ganitha Sawiya</span>
               </Link>
 
-              <div className="hidden md:flex space-x-8">
+
+              <div className="hidden md:flex items-center gap-6">
                 <Link href="/" className="flex items-center space-x-1 hover:text-blue-200 transition">
                   <LayoutDashboard size={18} />
                   <span>Dashboard</span>
@@ -56,9 +57,9 @@ export default function RootLayout({
                   <span>Calendar</span>
                 </Link>
                 {isAdmin && (
-                  <Link href="/volunteers" className="flex items-center space-x-1 hover:text-blue-200 transition">
-                    <Users size={18} />
-                    <span>Volunteers</span>
+                  <Link href="/admin/settings" className="flex items-center space-x-1 hover:text-blue-200 transition">
+                    <Settings size={18} />
+                    <span>Settings</span>
                   </Link>
                 )}
               </div>
