@@ -151,3 +151,45 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return new NextResponse("Internal Error", { status: 500 });
     }
 }
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+    try {
+        const cookieStore = cookies();
+        const token = cookieStore.get("auth_token")?.value;
+        let role = null;
+        let userDistrict = null;
+
+        if (token) {
+            try {
+                const payload = JSON.parse(token);
+                role = payload.role;
+                userDistrict = payload.district;
+            } catch (e) {
+                if (token === "admin_logged_in_v2") role = "SUPER_ADMIN";
+            }
+        }
+
+        if (!role) return new NextResponse("Unauthorized", { status: 401 });
+
+        const existingEvent = await prisma.event.findUnique({ where: { id: params.id } });
+        if (!existingEvent) return new NextResponse("Event not found", { status: 404 });
+
+        if (role === 'DISTRICT_ADMIN' && existingEvent.district !== userDistrict) {
+            return NextResponse.json({ error: "Unauthorized: You can only edit events in your district" }, { status: 403 });
+        }
+
+        const body = await req.json();
+        const { status } = body;
+
+        const event = await prisma.event.update({
+            where: { id: params.id },
+            data: { status }
+        });
+
+        return NextResponse.json(event);
+
+    } catch (error) {
+        console.error(error);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
+}

@@ -6,6 +6,7 @@ import { MapPin, School, Users, Calendar as CalendarIcon, Filter, X } from "luci
 import DistrictChart from "./DistrictChart";
 import DistrictProgress from "./DistrictProgress";
 import DistrictScoreboard from "./DistrictScoreboard";
+import PendingReviews from "./PendingReviews";
 import { useRouter } from "next/navigation";
 
 // All 25 Districts
@@ -163,6 +164,9 @@ export default function DashboardClient({ events }: { events: any[] }) {
                     </div>
                 </div>
             </div>
+
+            {/* Overdue Banner */}
+            <PendingReviews events={filteredEvents.filter(e => e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0)))} />
 
             {/* Hero Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
