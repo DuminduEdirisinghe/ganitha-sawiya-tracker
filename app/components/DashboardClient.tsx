@@ -25,9 +25,28 @@ const TIME_FILTERS = {
     YEARLY: "This Year"
 };
 
-export default function DashboardClient({ events, isAdmin }: { events: any[], isAdmin: boolean }) {
+export default function DashboardClient({ events, currentUser }: { events: any[], currentUser?: { role: string, district: string | null } | null }) {
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [timeFilter, setTimeFilter] = useState<keyof typeof TIME_FILTERS>("ALL");
+    //...
+    //...
+    {/* Overdue Banner - Context Aware */ }
+    {
+        currentUser && (
+            <PendingReviews
+                events={filteredEvents.filter(e => {
+                    const isOverdue = e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0));
+                    if (!isOverdue) return false;
+
+                    // Visibility Logic
+                    if (currentUser.role === 'SUPER_ADMIN') return true;
+                    if (currentUser.role === 'DISTRICT_ADMIN' && e.district === currentUser.district) return true;
+
+                    return false;
+                })}
+            />
+        )
+    }
     const [modalState, setModalState] = useState<{ isOpen: boolean; title: string; items: string[] }>({
         isOpen: false,
         title: "",
@@ -165,8 +184,21 @@ export default function DashboardClient({ events, isAdmin }: { events: any[], is
                 </div>
             </div>
 
-            {/* Overdue Banner */}
-            {isAdmin && <PendingReviews events={filteredEvents.filter(e => e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0)))} />}
+            {/* Overdue Banner - Context Aware */}
+            {currentUser && (
+                <PendingReviews
+                    events={filteredEvents.filter(e => {
+                        const isOverdue = e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0));
+                        if (!isOverdue) return false;
+
+                        // Visibility Logic
+                        if (currentUser.role === 'SUPER_ADMIN') return true;
+                        if (currentUser.role === 'DISTRICT_ADMIN' && e.district === currentUser.district) return true;
+
+                        return false;
+                    })}
+                />
+            )}
 
             {/* Hero Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
