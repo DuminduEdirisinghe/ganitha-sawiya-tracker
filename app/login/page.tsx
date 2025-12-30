@@ -24,7 +24,8 @@ export default function LoginPage() {
             router.push("/admin"); // Redirect to admin dashboard
             router.refresh();
         } else {
-            setError("Invalid username or password");
+            const data = await res.json();
+            setError(data.error || "Invalid username or password");
         }
     };
 
