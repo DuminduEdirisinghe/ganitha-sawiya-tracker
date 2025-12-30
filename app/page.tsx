@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import DashboardClient from "@/app/components/DashboardClient";
+import { cookies } from "next/headers";
 
 export const dynamic = 'force-dynamic'; // Ensure fresh data on every request
 
@@ -19,8 +20,21 @@ export default async function Home() {
       updatedAt: event.updatedAt.toISOString(),
     }));
 
+    // Check for admin role
+    const cookieStore = cookies();
+    const token = cookieStore.get("auth_token")?.value;
+    let isAdmin = false;
+    if (token) {
+      try {
+        const payload = JSON.parse(token);
+        if (payload.role) isAdmin = true; // Any role (Super or District) is admin
+      } catch (e) {
+        if (token === "admin_logged_in_v2") isAdmin = true;
+      }
+    }
+
     return (
-      <DashboardClient events={serializedEvents} />
+      <DashboardClient events={serializedEvents} isAdmin={isAdmin} />
     );
   } catch (error) {
     console.error("Dashboard Load Error:", error);

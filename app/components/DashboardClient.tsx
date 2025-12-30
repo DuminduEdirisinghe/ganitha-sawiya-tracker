@@ -25,7 +25,7 @@ const TIME_FILTERS = {
     YEARLY: "This Year"
 };
 
-export default function DashboardClient({ events }: { events: any[] }) {
+export default function DashboardClient({ events, isAdmin }: { events: any[], isAdmin: boolean }) {
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const [timeFilter, setTimeFilter] = useState<keyof typeof TIME_FILTERS>("ALL");
     const [modalState, setModalState] = useState<{ isOpen: boolean; title: string; items: string[] }>({
@@ -166,7 +166,7 @@ export default function DashboardClient({ events }: { events: any[] }) {
             </div>
 
             {/* Overdue Banner */}
-            <PendingReviews events={filteredEvents.filter(e => e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0)))} />
+            {isAdmin && <PendingReviews events={filteredEvents.filter(e => e.status === 'UPCOMING' && new Date(e.date) < new Date(new Date().setHours(0, 0, 0, 0)))} />}
 
             {/* Hero Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
