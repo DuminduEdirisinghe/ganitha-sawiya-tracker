@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { LayoutDashboard, Calendar, Users, LogIn } from "lucide-react";
+import { LayoutDashboard, Calendar, Users, LogIn, Settings } from "lucide-react";
 import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
