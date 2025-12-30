@@ -11,13 +11,27 @@ export async function GET() {
             return NextResponse.json({ message: "Database already seeded" });
         }
 
-        // Create Admin User
+        // Create Super Admin
         await prisma.user.create({
             data: {
                 username: "admin",
-                password: "password123", // In real app, hash this!
+                password: "password123",
+                role: "SUPER_ADMIN", // Ensure this has full access
             },
         });
+
+        // Create District Admins
+        const districts = ["Colombo", "Gampaha", "Galle", "Kandy", "Jaffna", "Matara"];
+        for (const district of districts) {
+            await prisma.user.create({
+                data: {
+                    username: district.toLowerCase(),
+                    password: "password123",
+                    role: "DISTRICT_ADMIN",
+                    district: district,
+                },
+            });
+        }
 
         // Create Events
         const events = [
