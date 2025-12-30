@@ -20,8 +20,14 @@ export async function GET() {
             },
         });
 
-        // Create District Admins
-        const districts = ["Colombo", "Gampaha", "Galle", "Kandy", "Jaffna", "Matara"];
+        // Create District Admins (All 25 Districts)
+        const districts = [
+            "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
+            "Galle", "Gampaha", "Hambantota", "Jaffna", "Kalutara",
+            "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", "Mannar",
+            "Matale", "Matara", "Monaragala", "Mullaitivu", "Nuwara Eliya",
+            "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
+        ];
         for (const district of districts) {
             await prisma.user.create({
                 data: {
